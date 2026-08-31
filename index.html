@@ -1,204 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#f6f4ef" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Articulation Lab" />
-  <meta name="description" content="Practice articulation with adaptive prompts, video recording, transcript analysis, and progress tracking." />
-  <link rel="manifest" href="./manifest.json" />
-  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-  <link rel="icon" href="./icons/icon-192.png" />
-  <link rel="stylesheet" href="./styles.css" />
-  <title>Articulation Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./styles.css">
+<title>Articulation Lab</title>
 </head>
 <body>
 <main class="shell">
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">Articulation Lab</div>
-      <h1>Train the way you speak.</h1>
-      <p class="intro">Generate adaptive prompts, record your response, capture a transcript, measure pacing and filler words, check response structure, and compare your progress over time.</p>
-    </div>
-    <div class="header-actions">
-      <div class="stats-chip" id="sessionCount">0 saved sessions</div>
-      <button class="btn secondary" id="installBtn" hidden>Install app</button>
-    </div>
-  </header>
+<header><div><div class="eyebrow">Articulation Lab · Stage 2.1</div><h1>Train the way you speak.</h1><p>Record, transcribe, detect thought units, estimate pauses, diagnose the response, then retry with one specific coaching target.</p></div><div class="chip" id="sessionCount">0 saved sessions</div></header>
 
-  <section class="pwa-note" id="pwaNote">
-    <strong>App-ready.</strong>
-    <span>When this project is hosted over HTTPS, you can install it on your iPhone or computer and use it like an app.</span>
-  </section>
+<nav class="mobileNav">
+<button onclick="document.querySelector('#practice').scrollIntoView({behavior:'smooth'})">Practice</button>
+<button onclick="document.querySelector('#analysis').scrollIntoView({behavior:'smooth'})">Analysis</button>
+<button onclick="document.querySelector('#progress').scrollIntoView({behavior:'smooth'})">Progress</button>
+</nav>
 
-  <section class="grid">
-    <div class="card">
-      <h2>1. Adaptive prompt trainer</h2>
-      <div class="controls">
-        <div>
-          <label for="goal">Practice focus</label>
-          <select id="goal">
-            <option value="conversation">Conversation & small talk</option>
-            <option value="storytelling">Storytelling</option>
-            <option value="professional">Professional speaking</option>
-            <option value="impromptu">Impromptu response</option>
-            <option value="persuasion">Persuasion & opinions</option>
-            <option value="explain">Explain clearly</option>
-          </select>
-        </div>
-        <div>
-          <label for="difficulty">Difficulty</label>
-          <select id="difficulty">
-            <option value="easy">Warm-up</option>
-            <option value="medium" selected>Stretch</option>
-            <option value="hard">Challenge me</option>
-          </select>
-        </div>
-        <div>
-          <label for="duration">Target length</label>
-          <select id="duration">
-            <option value="30">30 seconds</option>
-            <option value="60" selected>1 minute</option>
-            <option value="120">2 minutes</option>
-            <option value="180">3 minutes</option>
-          </select>
-        </div>
-        <div>
-          <label for="tone">Speaking style</label>
-          <select id="tone">
-            <option value="natural">Natural & conversational</option>
-            <option value="concise">Concise & structured</option>
-            <option value="confident">Confident & decisive</option>
-            <option value="warm">Warm & engaging</option>
-          </select>
-        </div>
-      </div>
+<section class="grid">
+<article class="card" id="practice">
+<h2>1. Prompt trainer</h2>
+<div class="controls">
+<label>Focus<select id="goal"><option>Conversation & small talk</option><option>Storytelling</option><option>Professional speaking</option><option>Impromptu response</option><option>Persuasion & opinions</option><option>Explain clearly</option></select></label>
+<label>Target<select id="duration"><option value="30">30 sec</option><option value="60" selected>1 min</option><option value="120">2 min</option></select></label>
+</div>
+<div class="prompt"><small>CURRENT PROMPT</small><div id="promptText">Tell me about something you recently learned and why it mattered to you.</div><p>Answer directly → support it → finish cleanly.</p></div>
+<div class="row"><button id="newPrompt">New prompt</button><button class="soft" id="followup">Follow-up</button></div>
+</article>
 
-      <div class="prompt-box">
-        <div class="prompt-label">Current prompt</div>
-        <div class="prompt-text" id="promptText">Tell me about something you recently learned and why it mattered to you.</div>
-        <div class="prompt-hint" id="promptHint">Answer directly, give one supporting detail, then finish cleanly.</div>
-      </div>
+<article class="card">
+<h2>2. Record + transcribe</h2>
+<div class="attempt"><b id="attemptLabel">Current attempt</b><span id="attemptStatus">Ready</span></div>
+<div class="video"><video id="preview" playsinline muted></video><span id="timer">00:00</span></div>
+<div class="row">
+<button id="cameraBtn">Enable camera</button>
+<button id="recordBtn" class="danger" disabled>Start recording</button>
+<button id="stopBtn" class="soft" disabled>Stop</button>
+<button id="downloadBtn" class="soft" disabled>Save video</button>
+</div>
+<p class="status" id="status">Camera and microphone remain in your browser.</p>
+<div class="transcript" id="transcript">Transcript will appear here.</div>
+<label>Transcript editor<textarea id="manualTranscript"></textarea></label>
+</article>
 
-      <div class="button-row">
-        <button class="btn" id="generateBtn">New prompt</button>
-        <button class="btn secondary" id="followupBtn">AI-style follow-up</button>
-        <button class="btn ghost" id="harderBtn">Make it harder</button>
-      </div>
-      <p class="micro">The current coach runs locally. Your recordings and transcripts are not sent to an external AI service.</p>
-    </div>
+<article class="card" id="analysis">
+<h2>3. Speech intelligence</h2>
+<div class="metrics">
+<div><small>WORDS</small><b id="wordCount">0</b><span>Total words</span></div>
+<div><small>PACE</small><b id="wpm">0</b><span>Words/min</span></div>
+<div><small>FILLERS</small><b id="fillerCount">0</b><span>Detected</span></div>
+<div><small>IDEAS</small><b id="ideaCount">0</b><span>Thought units</span></div>
+<div><small>PAUSES</small><b id="pauseCount">0</b><span>Estimated ≥450 ms</span></div>
+<div><small>AVG PAUSE</small><b id="avgPause">—</b><span>Seconds</span></div>
+</div>
+<div class="coach">
+<div><b id="paceLabel">Pacing</b><span id="paceNote">Record a response to analyze pacing.</span></div>
+<div><b id="fillerLabel">Filler words</b><span id="fillerNote">Filler tracking will appear here.</span></div>
+<div><b id="structureLabel">Structure</b><span id="structureNote">Uses conceptual progression, not punctuation alone.</span></div>
+<div><b id="clarityLabel">Clarity</b><span id="clarityNote">Checks thought-unit density and clause stacking.</span></div>
+</div>
+<div class="suggest"><small>SUGGESTED BREAKS</small><div id="suggestedBreaks">Analyze a transcript to see possible thought boundaries.</div></div>
+<div class="target"><small>NEXT-ROUND COACHING TARGET</small><b id="targetTitle">Complete the first attempt.</b><span id="targetText">Your next target will come from the diagnosis.</span></div>
+<div class="row"><button id="analyzeBtn">Analyze transcript</button><button class="soft" id="retryBtn" disabled>Try again with suggested structure</button></div>
+<p class="status">Pause detection is an estimated browser-side coaching signal, not a clinical acoustic measurement.</p>
+</article>
 
-    <div class="card">
-      <h2>2. Record + transcribe</h2>
-      <div class="video-wrap">
-        <video id="preview" playsinline muted></video>
-        <div class="timer" id="timer">00:00</div>
-      </div>
-      <div class="button-row">
-        <button class="btn" id="cameraBtn">Enable camera</button>
-        <button class="btn danger" id="recordBtn" disabled>Start recording</button>
-        <button class="btn ghost" id="stopBtn" disabled>Stop</button>
-        <button class="btn secondary" id="downloadBtn" disabled>Save video</button>
-      </div>
-      <div class="status" id="status">Camera and microphone stay in your browser.</div>
-      <div class="transcript" id="transcript">Transcript will appear here when browser speech recognition is available. You can also type or paste a transcript below.</div>
-      <div class="field-block">
-        <label for="manualTranscript">Transcript editor</label>
-        <textarea id="manualTranscript" placeholder="Your speech transcript will appear here, or paste one manually."></textarea>
-      </div>
-    </div>
+<article class="card">
+<h2>4. Self-review</h2>
+<div class="sliders">
+<label>Clarity <span id="clarityVal">5</span><input id="clarity" type="range" min="1" max="10" value="5"></label>
+<label>Pacing <span id="pacingVal">5</span><input id="pacing" type="range" min="1" max="10" value="5"></label>
+<label>Confidence <span id="confidenceVal">5</span><input id="confidence" type="range" min="1" max="10" value="5"></label>
+<label>Structure <span id="structureVal">5</span><input id="structure" type="range" min="1" max="10" value="5"></label>
+</div>
+<label>What did you notice?<textarea id="notes"></textarea></label>
+<label>One focus for the next round<input id="nextFocus"></label>
+<div class="row"><button id="saveSessionBtn">Save session</button><button class="soft" id="repeatBtn">Repeat same prompt</button></div>
+</article>
 
-    <div class="card">
-      <h2>3. Automatic speech analysis</h2>
-      <div class="metrics">
-        <div class="metric"><div class="k">Words</div><div class="v" id="wordCount">0</div><div class="d">Total spoken words</div></div>
-        <div class="metric"><div class="k">Pace</div><div class="v" id="wpm">0</div><div class="d">Words per minute</div></div>
-        <div class="metric"><div class="k">Fillers</div><div class="v" id="fillerCount">0</div><div class="d">Um, uh, like, etc.</div></div>
-        <div class="metric"><div class="k">Avg sentence</div><div class="v" id="sentenceLen">0</div><div class="d">Words per sentence</div></div>
-      </div>
+<article class="card" id="progress">
+<h2>5. Progress</h2>
+<p>Existing Stage 2 local sessions are preserved on the same device/browser.</p>
+<div class="metrics">
+<div><small>BEST AVG</small><b id="bestAvg">—</b><span>Highest session</span></div>
+<div><small>AVG PACE</small><b id="avgWpm">—</b><span>Across sessions</span></div>
+<div><small>AVG FILLERS</small><b id="avgFillers">—</b><span>Per session</span></div>
+<div><small>PRACTICE</small><b id="practiceTime">—</b><span>Minutes</span></div>
+</div>
+<div id="sessionList" class="history"></div>
+</article>
 
-      <div class="analysis-box">
-        <div class="prompt-label">Coach analysis</div>
-        <div class="analysis-grid">
-          <div class="flag"><strong id="paceLabel">Pacing</strong><span id="paceNote">Add a transcript and recording duration to analyze pacing.</span></div>
-          <div class="flag"><strong id="fillerLabel">Filler words</strong><span id="fillerNote">Filler tracking will appear here.</span></div>
-          <div class="flag"><strong id="structureLabel">Structure</strong><span id="structureNote">The coach checks for an opening, support, and a conclusion.</span></div>
-          <div class="flag"><strong id="clarityLabel">Clarity</strong><span id="clarityNote">The coach checks sentence length and repeated phrasing.</span></div>
-        </div>
-      </div>
-      <div class="button-row">
-        <button class="btn" id="analyzeBtn">Analyze transcript</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>4. Self-review</h2>
-      <div class="review-grid">
-        <div class="slider">
-          <div class="slider-head"><strong>Clarity</strong><span class="score" id="clarityVal">5</span></div>
-          <input type="range" id="clarity" min="1" max="10" value="5">
-        </div>
-        <div class="slider">
-          <div class="slider-head"><strong>Pacing</strong><span class="score" id="pacingVal">5</span></div>
-          <input type="range" id="pacing" min="1" max="10" value="5">
-        </div>
-        <div class="slider">
-          <div class="slider-head"><strong>Confidence</strong><span class="score" id="confidenceVal">5</span></div>
-          <input type="range" id="confidence" min="1" max="10" value="5">
-        </div>
-        <div class="slider">
-          <div class="slider-head"><strong>Structure</strong><span class="score" id="structureVal">5</span></div>
-          <input type="range" id="structure" min="1" max="10" value="5">
-        </div>
-        <div class="full">
-          <label for="notes">What did you notice?</label>
-          <textarea id="notes" placeholder="Example: I rushed my first sentence but slowed down once I reached my example."></textarea>
-        </div>
-        <div class="full">
-          <label for="nextFocus">One focus for the next round</label>
-          <input id="nextFocus" placeholder="Example: Pause one beat before answering.">
-        </div>
-      </div>
-      <div class="button-row">
-        <button class="btn" id="saveSessionBtn">Save session</button>
-        <button class="btn secondary" id="repeatBtn">Repeat same prompt</button>
-        <button class="btn ghost" id="resetScoresBtn">Reset review</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>5. Progress dashboard</h2>
-      <p class="sub">Sessions are saved locally on this device for now. Cloud sync comes in Stage 3.</p>
-      <div class="chart">
-        <svg id="trendChart" viewBox="0 0 640 240" role="img" aria-label="Articulation score trend chart"></svg>
-        <div class="legend"><span><span class="dot"></span>Average self-review score</span></div>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="k">Best avg</div><div class="v" id="bestAvg">—</div><div class="d">Highest session</div></div>
-        <div class="metric"><div class="k">Avg pace</div><div class="v" id="avgWpm">—</div><div class="d">Across sessions</div></div>
-        <div class="metric"><div class="k">Avg fillers</div><div class="v" id="avgFillers">—</div><div class="d">Per session</div></div>
-        <div class="metric"><div class="k">Practice</div><div class="v" id="practiceTime">—</div><div class="d">Minutes recorded</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>6. Compare sessions</h2>
-      <div class="controls">
-        <div><label for="compareA">Earlier session</label><select id="compareA"><option value="">Choose session</option></select></div>
-        <div><label for="compareB">Later session</label><select id="compareB"><option value="">Choose session</option></select></div>
-      </div>
-      <div class="compare" id="compareBox"></div>
-      <div class="session-list" id="sessionList"><div class="micro">No saved sessions yet.</div></div>
-      <div class="button-row">
-        <button class="btn ghost" id="clearHistoryBtn">Clear saved history</button>
-      </div>
-    </div>
-  </section>
-
-  <div class="footer-note">Best drill: use one prompt twice. First response = baseline. Second response = deliberate correction.</div>
+<article class="card">
+<h2>6. Compare sessions</h2>
+<div class="controls"><label>Earlier<select id="compareA"><option value="">Choose session</option></select></label><label>Later<select id="compareB"><option value="">Choose session</option></select></label></div>
+<div id="compareBox" class="compare"></div>
+</article>
+</section>
 </main>
 <script src="./app.js"></script>
-</body>
-</html>
+</body></html>

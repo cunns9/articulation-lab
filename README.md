@@ -1,71 +1,20 @@
-# Articulation Lab — Stage 2 PWA
+# Articulation Lab — Stage 2.1
 
-This is the Progressive Web App version of Articulation Lab.
+This update addresses issues discovered during desktop and iPhone testing.
 
-## Included
-- Responsive iPhone + desktop interface
-- Camera and microphone recording
-- Browser speech transcription when supported
-- Local transcript analysis
-- WPM, filler-word, sentence-length, and structure checks
-- Self-review scores
-- Saved local session history
-- Progress dashboard
-- Session comparison
-- PWA manifest
-- Offline service worker
-- Home-screen install support
-- GitHub Pages-ready project structure
+## Changes
+- Fixes the repeat-recording lifecycle so a new attempt can start without refreshing.
+- Replaces punctuation-only sentence analysis with heuristic thought-unit segmentation.
+- Adds Suggested Breaks to show conceptual boundaries.
+- Adds estimated pause count and average pause length using microphone amplitude.
+- Stops interpreting low WPM as proof of long pauses.
+- Adds one specific next-round coaching target.
+- Adds a “Try again with suggested structure” workflow.
+- Preserves Stage 2 local session history by using the same localStorage key.
+- Adds idea and pause counts to future saved sessions and comparisons.
 
-## Files
-- `index.html` — app interface
-- `styles.css` — visual design
-- `app.js` — app logic
-- `manifest.json` — installable PWA metadata
-- `sw.js` — offline caching/service worker
-- `icons/` — app icons
+## Limits
+Thought segmentation and pause detection are heuristic coaching signals. They are not a full semantic AI model or clinical speech/acoustic analysis.
 
-## Run locally
-Camera/microphone and service workers generally require HTTPS or localhost.
-For development, use a local web server rather than opening `index.html` directly.
-
-Example with Python:
-
-```bash
-python3 -m http.server 8000
-```
-
-Then visit:
-
-```text
-http://localhost:8000
-```
-
-## Deploy with GitHub Pages
-1. Create a new GitHub repository, e.g. `articulation-lab`.
-2. Upload all files and folders from this project.
-3. Commit them to the `main` branch.
-4. In GitHub: **Settings → Pages**.
-5. Under **Build and deployment**, choose **Deploy from a branch**.
-6. Choose `main` and `/ (root)`.
-7. Save.
-8. GitHub will provide an HTTPS site URL.
-
-## Install on iPhone
-After deployment:
-1. Open the GitHub Pages URL in Safari.
-2. Tap **Share**.
-3. Tap **Add to Home Screen**.
-4. Name it `Articulation Lab`.
-5. Tap **Add**.
-
-The app will then launch from the iPhone Home Screen in standalone mode.
-
-## Current storage
-Session history is stored with browser `localStorage`.
-It stays on the current device/browser only.
-
-Stage 3 should replace local-only storage with authentication + cloud sync (for example, Supabase).
-
-## Important browser note
-Live SpeechRecognition support differs by browser and iOS version. Recording can still work even when live transcription is unavailable; the transcript field remains editable.
+## Deployment
+Upload the updated root files (`index.html`, `styles.css`, `app.js`, `manifest.json`, `sw.js`, `README.md`) to the existing `articulation-lab` repository and replace the old versions. Keep/upload the `icons/` directory. Commit the update; GitHub Pages will redeploy automatically.

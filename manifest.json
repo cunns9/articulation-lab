@@ -1,13 +1,11 @@
 {
   "name": "Articulation Lab",
   "short_name": "Articulation",
-  "description": "Practice articulation with adaptive prompts, recording, transcript analysis, and progress tracking.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f6f4ef",
   "theme_color": "#f6f4ef",
-  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "./icons/icon-192.png",
