@@ -1,6 +1,7 @@
 {
   "name": "Articulation Lab",
   "short_name": "Articulation",
+  "description": "Speech-practice PWA with reliable recorder reset, hierarchical idea analysis, pause-confidence checks, and coaching.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

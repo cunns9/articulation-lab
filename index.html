@@ -1,104 +1,185 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f6f4ef">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-<link rel="stylesheet" href="./styles.css">
-<title>Articulation Lab</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6f4ef">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Articulation Lab">
+  <meta name="description" content="Practice articulation with reliable recording reset, hierarchical thought analysis, pause reliability checks, and coaching.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Articulation Lab</title>
 </head>
 <body>
 <main class="shell">
-<header><div><div class="eyebrow">Articulation Lab · Stage 2.1</div><h1>Train the way you speak.</h1><p>Record, transcribe, detect thought units, estimate pauses, diagnose the response, then retry with one specific coaching target.</p></div><div class="chip" id="sessionCount">0 saved sessions</div></header>
+  <header class="top">
+    <div>
+      <div class="eyebrow">Articulation Lab · Stage 2.2</div>
+      <h1>Train the way you speak.</h1>
+      <p class="lead">Record → analyze meaning and delivery separately → diagnose one target → start a clean new recording without refreshing.</p>
+    </div>
+    <div class="chip" id="sessionCount">0 saved sessions</div>
+  </header>
 
-<nav class="mobileNav">
-<button onclick="document.querySelector('#practice').scrollIntoView({behavior:'smooth'})">Practice</button>
-<button onclick="document.querySelector('#analysis').scrollIntoView({behavior:'smooth'})">Analysis</button>
-<button onclick="document.querySelector('#progress').scrollIntoView({behavior:'smooth'})">Progress</button>
-</nav>
+  <nav class="mobile-nav">
+    <button data-jump="practice">Practice</button>
+    <button data-jump="analysis">Analysis</button>
+    <button data-jump="progress">Progress</button>
+  </nav>
 
-<section class="grid">
-<article class="card" id="practice">
-<h2>1. Prompt trainer</h2>
-<div class="controls">
-<label>Focus<select id="goal"><option>Conversation & small talk</option><option>Storytelling</option><option>Professional speaking</option><option>Impromptu response</option><option>Persuasion & opinions</option><option>Explain clearly</option></select></label>
-<label>Target<select id="duration"><option value="30">30 sec</option><option value="60" selected>1 min</option><option value="120">2 min</option></select></label>
-</div>
-<div class="prompt"><small>CURRENT PROMPT</small><div id="promptText">Tell me about something you recently learned and why it mattered to you.</div><p>Answer directly → support it → finish cleanly.</p></div>
-<div class="row"><button id="newPrompt">New prompt</button><button class="soft" id="followup">Follow-up</button></div>
-</article>
+  <section class="grid">
+    <article class="card" id="practice">
+      <h2>1. Prompt trainer</h2>
+      <div class="controls">
+        <label>Focus
+          <select id="goal">
+            <option value="conversation">Conversation & small talk</option>
+            <option value="storytelling">Storytelling</option>
+            <option value="professional">Professional speaking</option>
+            <option value="impromptu">Impromptu response</option>
+            <option value="persuasion">Persuasion & opinions</option>
+            <option value="explain">Explain clearly</option>
+          </select>
+        </label>
+        <label>Target
+          <select id="duration">
+            <option value="30">30 sec</option>
+            <option value="60" selected>1 min</option>
+            <option value="120">2 min</option>
+          </select>
+        </label>
+      </div>
 
-<article class="card">
-<h2>2. Record + transcribe</h2>
-<div class="attempt"><b id="attemptLabel">Current attempt</b><span id="attemptStatus">Ready</span></div>
-<div class="video"><video id="preview" playsinline muted></video><span id="timer">00:00</span></div>
-<div class="row">
-<button id="cameraBtn">Enable camera</button>
-<button id="recordBtn" class="danger" disabled>Start recording</button>
-<button id="stopBtn" class="soft" disabled>Stop</button>
-<button id="downloadBtn" class="soft" disabled>Save video</button>
-</div>
-<p class="status" id="status">Camera and microphone remain in your browser.</p>
-<div class="transcript" id="transcript">Transcript will appear here.</div>
-<label>Transcript editor<textarea id="manualTranscript"></textarea></label>
-</article>
+      <div class="prompt">
+        <small>CURRENT PROMPT</small>
+        <div id="promptText">Tell me about something you recently learned and why it mattered to you.</div>
+        <p>Answer directly → support it → finish cleanly.</p>
+      </div>
+      <div class="row">
+        <button id="newPrompt">New prompt</button>
+        <button class="soft" id="followup">Follow-up</button>
+      </div>
+    </article>
 
-<article class="card" id="analysis">
-<h2>3. Speech intelligence</h2>
-<div class="metrics">
-<div><small>WORDS</small><b id="wordCount">0</b><span>Total words</span></div>
-<div><small>PACE</small><b id="wpm">0</b><span>Words/min</span></div>
-<div><small>FILLERS</small><b id="fillerCount">0</b><span>Detected</span></div>
-<div><small>IDEAS</small><b id="ideaCount">0</b><span>Thought units</span></div>
-<div><small>PAUSES</small><b id="pauseCount">0</b><span>Estimated ≥450 ms</span></div>
-<div><small>AVG PAUSE</small><b id="avgPause">—</b><span>Seconds</span></div>
-</div>
-<div class="coach">
-<div><b id="paceLabel">Pacing</b><span id="paceNote">Record a response to analyze pacing.</span></div>
-<div><b id="fillerLabel">Filler words</b><span id="fillerNote">Filler tracking will appear here.</span></div>
-<div><b id="structureLabel">Structure</b><span id="structureNote">Uses conceptual progression, not punctuation alone.</span></div>
-<div><b id="clarityLabel">Clarity</b><span id="clarityNote">Checks thought-unit density and clause stacking.</span></div>
-</div>
-<div class="suggest"><small>SUGGESTED BREAKS</small><div id="suggestedBreaks">Analyze a transcript to see possible thought boundaries.</div></div>
-<div class="target"><small>NEXT-ROUND COACHING TARGET</small><b id="targetTitle">Complete the first attempt.</b><span id="targetText">Your next target will come from the diagnosis.</span></div>
-<div class="row"><button id="analyzeBtn">Analyze transcript</button><button class="soft" id="retryBtn" disabled>Try again with suggested structure</button></div>
-<p class="status">Pause detection is an estimated browser-side coaching signal, not a clinical acoustic measurement.</p>
-</article>
+    <article class="card">
+      <h2>2. Record + transcribe</h2>
+      <div class="attempt-row">
+        <b id="attemptLabel">Recording 1</b>
+        <span id="recordingState">Ready</span>
+      </div>
 
-<article class="card">
-<h2>4. Self-review</h2>
-<div class="sliders">
-<label>Clarity <span id="clarityVal">5</span><input id="clarity" type="range" min="1" max="10" value="5"></label>
-<label>Pacing <span id="pacingVal">5</span><input id="pacing" type="range" min="1" max="10" value="5"></label>
-<label>Confidence <span id="confidenceVal">5</span><input id="confidence" type="range" min="1" max="10" value="5"></label>
-<label>Structure <span id="structureVal">5</span><input id="structure" type="range" min="1" max="10" value="5"></label>
-</div>
-<label>What did you notice?<textarea id="notes"></textarea></label>
-<label>One focus for the next round<input id="nextFocus"></label>
-<div class="row"><button id="saveSessionBtn">Save session</button><button class="soft" id="repeatBtn">Repeat same prompt</button></div>
-</article>
+      <div class="video-box">
+        <video id="preview" playsinline muted></video>
+        <span id="timer">00:00</span>
+        <div class="preview-state" id="previewState">Camera not enabled</div>
+      </div>
 
-<article class="card" id="progress">
-<h2>5. Progress</h2>
-<p>Existing Stage 2 local sessions are preserved on the same device/browser.</p>
-<div class="metrics">
-<div><small>BEST AVG</small><b id="bestAvg">—</b><span>Highest session</span></div>
-<div><small>AVG PACE</small><b id="avgWpm">—</b><span>Across sessions</span></div>
-<div><small>AVG FILLERS</small><b id="avgFillers">—</b><span>Per session</span></div>
-<div><small>PRACTICE</small><b id="practiceTime">—</b><span>Minutes</span></div>
-</div>
-<div id="sessionList" class="history"></div>
-</article>
+      <div class="row">
+        <button id="cameraBtn">Enable camera</button>
+        <button id="recordBtn" class="danger" disabled>Start recording</button>
+        <button id="stopBtn" class="soft" disabled>Stop</button>
+        <button id="newRecordingBtn" class="soft" hidden>New recording</button>
+        <button id="downloadBtn" class="soft" disabled>Save video</button>
+      </div>
 
-<article class="card">
-<h2>6. Compare sessions</h2>
-<div class="controls"><label>Earlier<select id="compareA"><option value="">Choose session</option></select></label><label>Later<select id="compareB"><option value="">Choose session</option></select></label></div>
-<div id="compareBox" class="compare"></div>
-</article>
-</section>
+      <p class="status" id="status">Camera and microphone remain in your browser.</p>
+
+      <div class="transcript" id="transcript">Transcript will appear here when live speech recognition is available.</div>
+      <label>Transcript editor
+        <textarea id="manualTranscript" placeholder="Edit recognition mistakes here before analysis."></textarea>
+      </label>
+    </article>
+
+    <article class="card" id="analysis">
+      <h2>3. Speech intelligence</h2>
+
+      <div class="section-label">MEANING / ORGANIZATION</div>
+      <div class="metrics four">
+        <div><small>MAIN IDEAS</small><b id="mainIdeaCount">0</b><span>Semantic groups</span></div>
+        <div><small>THOUGHT UNITS</small><b id="thoughtUnitCount">0</b><span>Supporting units</span></div>
+        <div><small>STRUCTURE</small><b id="structureScore">—</b><span>Organization signals</span></div>
+        <div><small>CLAUSE LOAD</small><b id="clauseLoad">—</b><span>Avg words/unit</span></div>
+      </div>
+
+      <div class="section-label delivery-label">DELIVERY</div>
+      <div class="metrics four">
+        <div><small>WORDS</small><b id="wordCount">0</b><span>Total words</span></div>
+        <div><small>PACE</small><b id="wpm">0</b><span>Words/min</span></div>
+        <div><small>FILLERS</small><b id="fillerCount">0</b><span>Detected</span></div>
+        <div><small>PAUSE DATA</small><b id="pauseState">—</b><span id="pauseSub">Not analyzed</span></div>
+      </div>
+
+      <div class="coach">
+        <div><b id="meaningLabel">Meaning</b><span id="meaningNote">Analyze a transcript to evaluate organization.</span></div>
+        <div><b id="deliveryLabel">Delivery</b><span id="deliveryNote">Delivery feedback only uses audio signals when capture is reliable.</span></div>
+        <div><b id="clarityLabel">Clarity</b><span id="clarityNote">The analyzer distinguishes complete thoughts from grammatical fragments.</span></div>
+        <div><b id="confidenceLabel">Analysis confidence</b><span id="confidenceNote">Confidence will reflect the evidence available for this attempt.</span></div>
+      </div>
+
+      <div class="suggest">
+        <small>MAIN IDEAS + SUPPORTING THOUGHTS</small>
+        <div id="suggestedBreaks">Analyze a transcript to see the hierarchy.</div>
+      </div>
+
+      <div class="target">
+        <small>NEXT-ROUND COACHING TARGET</small>
+        <b id="targetTitle">Complete the first attempt.</b>
+        <span id="targetText">The app will choose one target from the weakest reliable signal.</span>
+      </div>
+
+      <div class="row">
+        <button id="analyzeBtn">Analyze transcript</button>
+        <button id="retryBtn" class="soft" disabled>Retry same prompt</button>
+      </div>
+      <p class="status">Pause timing is treated as unavailable when the browser does not capture enough reliable audio-boundary evidence.</p>
+    </article>
+
+    <article class="card">
+      <h2>4. Self-review</h2>
+      <div class="sliders">
+        <label>Clarity <span id="clarityVal">5</span><input id="clarity" type="range" min="1" max="10" value="5"></label>
+        <label>Pacing <span id="pacingVal">5</span><input id="pacing" type="range" min="1" max="10" value="5"></label>
+        <label>Confidence <span id="confidenceVal">5</span><input id="confidence" type="range" min="1" max="10" value="5"></label>
+        <label>Structure <span id="structureVal">5</span><input id="structure" type="range" min="1" max="10" value="5"></label>
+      </div>
+      <label>What did you notice?
+        <textarea id="notes" placeholder="Example: I had the right ideas, but I hesitated inside the second thought."></textarea>
+      </label>
+      <label>One focus for the next round
+        <input id="nextFocus" placeholder="Generated from the diagnosis; edit if needed.">
+      </label>
+      <div class="row">
+        <button id="saveSessionBtn">Save session</button>
+        <button id="repeatBtn" class="soft">Repeat same prompt</button>
+      </div>
+    </article>
+
+    <article class="card" id="progress">
+      <h2>5. Progress</h2>
+      <p class="status">Older Stage 2/2.1 sessions remain readable. New Stage 2.2 sessions add hierarchy and pause-reliability fields.</p>
+      <div class="metrics four">
+        <div><small>BEST AVG</small><b id="bestAvg">—</b><span>Highest session</span></div>
+        <div><small>AVG PACE</small><b id="avgWpm">—</b><span>Across sessions</span></div>
+        <div><small>AVG FILLERS</small><b id="avgFillers">—</b><span>Per session</span></div>
+        <div><small>PRACTICE</small><b id="practiceTime">—</b><span>Minutes</span></div>
+      </div>
+      <div id="sessionList" class="history"></div>
+    </article>
+
+    <article class="card">
+      <h2>6. Compare sessions</h2>
+      <div class="controls">
+        <label>Earlier<select id="compareA"><option value="">Choose session</option></select></label>
+        <label>Later<select id="compareB"><option value="">Choose session</option></select></label>
+      </div>
+      <div id="compareBox" class="compare"></div>
+    </article>
+  </section>
 </main>
 <script src="./app.js"></script>
-</body></html>
+</body>
+</html>
